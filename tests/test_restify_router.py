@@ -1,14 +1,26 @@
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
+import motor
 import sys
 import os
 from pydantic import BaseModel, EmailStr, Field
+from pymongo_inmemory import Mongod
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/fastapi-mongo-restify")
 
 from restful_router import get_router
 from mongo_database import MongoDatabase
 
+class MongoClient(motor.motor_asyncio.AsyncIOMotorClient):
+    def __init__(self, host=None, port=None, **kwargs):
+        self._mongod = Mongod()
+        self._mongod.start()
+        super().__init__(self._mongod.connection_string, **kwargs)
+
+    def close(self):
+        self._mongod.stop()
+        super().close()
+        
 class TestInsertModel(BaseModel):
     name: str
 class TestUpdateModel(BaseModel):
@@ -19,7 +31,8 @@ class TestModel(MongoDatabase):
     updateModelClass = TestUpdateModel
     
     def __init__(self):
-        super().__init__('testcollection')
+        client = MongoClient()
+        super().__init__('testcollection', client)
     
 test_model = TestModel()
 
@@ -33,7 +46,7 @@ def delete_all():
         client.delete(item.get('_id'))
 
 
-def check_restify_router():
+def test_restify_router():
     delete_all()
     # check get all
     response = client.get("/")
@@ -61,4 +74,4 @@ def check_restify_router():
     
 
 if __name__ == "__main__":
-    check_restify_router()
+    test_restify_router()
