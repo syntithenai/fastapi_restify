@@ -16,9 +16,9 @@ class MongoDatabase():
         if clientParam is not None:
             client = clientParam
         else:
-            mongo_uri = config('MONGO_URI')
+            mongo_uri = config('MONGO_URI','')
             client = motor.motor_asyncio.AsyncIOMotorClient(mongo_uri)
-        database = client[config('MONGO_DATABASE')]
+        database = client[config('MONGO_DATABASE','')]
         self.collection = database.get_collection(collectionName)
         
     async def list(self):
