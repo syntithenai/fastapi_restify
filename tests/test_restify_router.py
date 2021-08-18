@@ -33,7 +33,7 @@ def delete_all():
         client.delete(item.get('_id'))
 
 
-def test_restify_router():
+def check_restify_router():
     delete_all()
     # check get all
     response = client.get("/")
@@ -61,4 +61,4 @@ def test_restify_router():
     
 
 if __name__ == "__main__":
-    test_restify_router()
+    check_restify_router()
