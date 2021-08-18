@@ -11,6 +11,9 @@ on:
 
 jobs:
   build:
+    env:
+      MONGO_DATABASE: testdatabase
+      secret: guiyfgc837tgf3iw87-012389764
 
     runs-on: ubuntu-latest
 
