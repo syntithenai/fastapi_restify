@@ -23,6 +23,14 @@ async def add_admin(admin_data: dict) -> dict:
     new_admin = await admin_collection.find_one({"_id": admin.inserted_id})
     return admin_helper(new_admin)
     
+
+def admin_helper(admin) -> dict:
+    return {
+        "id": str(admin['_id']),
+        "fullname": admin['fullname'],
+        "email": admin['email'],
+    }
+
     
 router = APIRouter()
 
