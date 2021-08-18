@@ -11,7 +11,9 @@ on:
 
 jobs:
   build:
-
+    env:
+      MONGO_DATABASE: testdatabase
+      secret: eek
     runs-on: ubuntu-latest
 
     steps:
