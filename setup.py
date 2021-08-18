@@ -9,17 +9,6 @@ README = (HERE / "README.md").read_text()
 
 # This call to setup() does all the work
 setup(
-    name="import pathlib
-from setuptools import setup
-
-# The directory containing this file
-HERE = pathlib.Path(__file__).parent
-
-# The text of the README file
-README = (HERE / "README.md").read_text()
-
-# This call to setup() does all the work
-setup(
     name="fastapi-mongo-restify",
     version="0.0.1",
     description="Rest API configured with pydantic, backed by file database or mongo",
@@ -36,6 +25,6 @@ setup(
     ],
     packages=["fastapi-mongo-restify"],
     include_package_data=True,
-    install_requires=["motor","PyJWT","bcrypt","uvicorn","pymongo","python-decouple","fastapi","pydantic[email]","passlib","motor"],
+    install_requires=["motor","PyJWT","bcrypt","uvicorn","pymongo","python-decouple","fastapi","pydantic[email]","passlib","pytest","jinja2","aiofiles","requests","pymongo-inmemory"],
     
 )

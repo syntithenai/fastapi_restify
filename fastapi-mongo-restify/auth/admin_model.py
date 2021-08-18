@@ -9,8 +9,8 @@ class AdminModel(BaseModel):
     class Config:
         schema_extra = {
             "example": {
-                "fullname": "Abdulazeez Abdulazeez Adeshina",
-                "email": "abdulazeez@x.com",
-                "password": "Yourpasswordgoes here."
+                "fullname": "Test User",
+                "email": "me@x.com",
+                "password": "me"
             }
         }

@@ -7,3 +7,8 @@ python-decouple
 fastapi
 pydantic[email]
 passlib
+pytest
+jinja2
+aiofiles
+requests
+pymongo-inmemory

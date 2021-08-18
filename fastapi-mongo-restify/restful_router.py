@@ -7,6 +7,8 @@ def get_router(model):
     @router.get("/", response_description="Records retrieved")
     async def get():
         records = await model.list()
+        # print('rec')
+        # print(records)
         return ResponseModel(records, "Data retrieved successfully") \
             if len(records) > 0 \
             else ResponseModel(
@@ -23,7 +25,6 @@ def get_router(model):
 
     @router.post("/", response_description="Data added into the database")
     async def post(record: model.insertModelClass = Body(...)):
-        
         record = jsonable_encoder(record)
         new_record = await model.insert(record)
         return ResponseModel(new_record, "Added successfully.")
@@ -37,7 +38,7 @@ def get_router(model):
             else ErrorResponseModel("An error occured", 404, "Student with id {0} doesn't exist".format(id))
 
 
-    @router.put("{id}")
+    @router.put("/{id}")
     async def update(id: str, req: model.updateModelClass = Body(...)):
         updated = await model.update(id, req.dict())
         return ResponseModel("Record with ID: {} name update is successful".format(id),

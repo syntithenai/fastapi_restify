@@ -13,6 +13,12 @@ class FileDatabase():
         
     async def list(self):
         return list(self.database.values())
+    
+    # TODO
+    async def find(self):
+        for record in list(self.database.values()):
+            print(record)
+    
         
     async def get(self, id):
         return self.database.get(id)
@@ -24,7 +30,8 @@ class FileDatabase():
         self.save()
     
     async def update(self, id, data):
-        self.database[id] = data
+        for d in data:
+            self.database[id][d] = data[d]
         self.save()
     
     async def delete(self, id):
@@ -43,7 +50,7 @@ class FileDatabase():
         f.close()
         
     def load(self):
-        print('load')
+        # print('load')
         try:
             f = open(self.filename, "r")
             j = json.loads(f.read())

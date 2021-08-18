@@ -8,6 +8,7 @@ The project provides
 - File database implementing list, get, insert, update, delete
 - Mongo database implementing list, get, insert, update, delete
 - FastAPI router with routes for each HTTP verb get, post, put, delete
+- Authentication helpers including a FastAPI router for login and create user plus a token_listener dependancy for ensuring login on a route
 
 This project is based on the example provided by https://github.com/Youngestdev/fastapi-mongo.
 
@@ -73,3 +74,15 @@ if __name__ == '__main__':
 ```
 
 5. Open [http://localhost:8080/docs](http://localhost:8080/docs) to see the FASTAPI generated documentation for your API.
+
+6. To use authentication, include the admin router and token_listener
+```
+from fastapi_mongo_restify.auth.jwt_bearer import JWTBearer
+from fastapi_mongo_restify.auth.admin_router import router as AdminRouter
+
+app.include_router(AdminRouter, tags=["Administrator"], prefix="/admin")
+token_listener = JWTBearer()
+# protect the products endpoint
+app.include_router(get_router(products_model), tags=["Products"], prefix="/products" , dependencies=[Depends(token_listener)])
+```
+
