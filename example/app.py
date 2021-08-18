@@ -6,6 +6,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi import Query, FastAPI, Request, WebSocket, WebSocketDisconnect
 from typing import Optional
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/fastapi-mongo-restify")
 from auth.jwt_bearer import JWTBearer
 from auth.admin_router import router as AdminRouter

@@ -12,11 +12,11 @@ class MongoDatabase():
     model = None
     
     def __init__(self, collectionName, clientParam = None):
-        mongo_uri = config('MONGO_URI')
         # allow injecting client for tests
         if clientParam is not None:
             client = clientParam
         else:
+            mongo_uri = config('MONGO_URI')
             client = motor.motor_asyncio.AsyncIOMotorClient(mongo_uri)
         database = client[config('MONGO_DATABASE')]
         self.collection = database.get_collection(collectionName)
