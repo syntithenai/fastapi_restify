@@ -12,3 +12,4 @@ jinja2
 aiofiles
 requests
 pymongo-inmemory
+httpx
