@@ -46,6 +46,7 @@ class OrdersModel(MongoDatabase):
     updateModelClass = UpdateOrderModel
     insertModelClass = InsertOrderModel
     
+    
     def __init__(self, name = 'orders'): #name = './file_database/animals.json'):
         super().__init__(name)
     

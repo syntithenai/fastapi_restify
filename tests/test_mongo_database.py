@@ -18,11 +18,13 @@ class MongoClient(motor.motor_asyncio.AsyncIOMotorClient):
         self._mongod.stop()
         super().close()
         
+
         
 def test_mongo_database():
     
     async def do_test():
         client = MongoClient()
+
         db = MongoDatabase('testcollection', client)
         # insert
         await db.insert({'name':'fred'})

@@ -11,24 +11,13 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/
 from auth.jwt_bearer import JWTBearer
 from auth.admin_router import router as AdminRouter
 from restful_router import get_router
+from restful_app import get_app
+
 # products save to file
 from products_model_file import products_model
 # orders save to mongo
 from orders_model_mongo import orders_model
 
-app = FastAPI(title='Test FastAPI Mongo Restify')
+token_listener = JWTBearer()  # require login for orders endpoints
+app = get_app({'products':products_model, 'orders':orders_model}, {'orders':[Depends(token_listener)]})
 
-base_path = os.path.dirname(os.path.abspath(__file__))+"/web_server_resources/"
-app.mount("/static", StaticFiles(directory= base_path + "static/"), name="static")
-templates = Jinja2Templates(directory= base_path + "templates")
-        
-token_listener = JWTBearer()
-@app.get("/")
-def read_root(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
-
-# login
-app.include_router(AdminRouter, tags=["Administrator"], prefix="/admin")
-# rest apis
-app.include_router(get_router(products_model), tags=["Products"], prefix="/products" , dependencies=[Depends(token_listener)])
-app.include_router(get_router(orders_model), tags=["Orders"], prefix="/orders")  # , dependencies=[Depends(token_listener)]
