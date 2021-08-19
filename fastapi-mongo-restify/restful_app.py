@@ -10,6 +10,7 @@ from typing import Optional
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/fastapi-mongo-restify")
 from auth.admin_router import router as AdminRouter
 from restful_router import get_router
+from auth.jwt_bearer import JWTBearer
 
 def assign_restful_routes(app, models, dependancies = None):
     for model in models:
