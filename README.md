@@ -1,5 +1,7 @@
 # FastAPI Restify
 
+[![Python application](https://github.com/syntithenai/fastapi-mongo-restify/actions/workflows/python-app.yml/badge.svg)](https://github.com/syntithenai/fastapi-mongo-restify/actions/workflows/python-app.yml)
+
 This project helps create a restful api using FastAPI and pydantic with storage engines including file and mongodb.
 
 The project uses pydantic to map incoming request body data into a storage format.
