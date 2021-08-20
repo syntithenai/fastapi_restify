@@ -26,7 +26,7 @@ class MongoDatabase():
         
     async def list(self, limit = None, offset = None):
         items = []
-        cursor = self.collection.find(criteria)
+        cursor = self.collection.find()
         if offset is not None:
             cursor.skip(offset)
         if limit is not None:
