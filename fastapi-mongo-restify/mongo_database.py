@@ -24,16 +24,26 @@ class MongoDatabase():
         database = client[config('MONGO_DATABASE','')]
         self.collection = database.get_collection(collectionName)
         
-    async def list(self):
+    async def list(self, limit = None, offset = None):
         items = []
-        async for item in self.collection.find():
+        cursor = self.collection.find(criteria)
+        if offset is not None:
+            cursor.skip(offset)
+        if limit is not None:
+            cursor.limit(limit)
+        async for item in cursor:
             item['_id'] = str(item.get('_id'))
             items.append(self.to_dict(item))
         return items
         
-    async def find(self, criteria):
+    async def find(self, criteria, limit = None, offset = None):
         items = []
-        async for item in self.collection.find(criteria):
+        cursor = self.collection.find(criteria)
+        if offset is not None:
+            cursor.skip(offset)
+        if limit is not None:
+            cursor.limit(limit)
+        async for item in cursor:
             item['_id'] = str(item.get('_id'))
             items.append(self.to_dict(item))
         return items

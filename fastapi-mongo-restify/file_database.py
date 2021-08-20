@@ -14,11 +14,11 @@ class FileDatabase():
         self.filename = filename
         self.load()
         
-    async def list(self):
+    async def list(self, limit = None, offset = None):
         return list(self.database.values())
     
-    # TODO
-    async def find(self, search_criteria = None):
+    # TODO - limit and offset
+    async def find(self, search_criteria = None, limit = None, offset = None):
         results = []
         for record in list(self.database.values()):
             ok = True

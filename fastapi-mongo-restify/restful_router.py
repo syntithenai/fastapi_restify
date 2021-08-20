@@ -7,12 +7,12 @@ import json
 def get_router(model):
     router = APIRouter()
     @router.get("/", response_description="Records retrieved")
-    async def get(filter = None):
+    async def get(filter = None, limit = None, offset = None):
         if filter is not None:
             c = json.loads(filter)
-            records = await model.find(c)
+            records = await model.find(c, limit, offset)
         else:
-            records = await model.list()
+            records = await model.list(limit, offset)
         return ResponseModel(records, "Data retrieved successfully") \
             if len(records) > 0 \
             else ResponseModel(
