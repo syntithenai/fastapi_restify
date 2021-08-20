@@ -26,7 +26,6 @@ class WebServer:
         return server
         
     def run(self):
-        # print(f"RUN WEB SERVER {audio_buffer_store.name}")
         server = self.create_server()
         server.run()
    
@@ -50,11 +49,4 @@ class WebServer:
         await self.server.shutdown()
         await asyncio.sleep(0.3)
         self.task.cancel() # Cleanup after test
-       
-# if __name__ == "__main__":
-    # async def doit():
-        # async with WebServer():
-            # while True:
-                # await asyncio.sleep(0.1)
-    
-    # asyncio.run(doit())
+ 

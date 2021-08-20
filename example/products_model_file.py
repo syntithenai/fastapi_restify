@@ -18,6 +18,7 @@ class InsertProductModel(BaseModel):
         
 # used to map request parameters on update/put
 class UpdateProductModel(BaseModel):
+    id: str = Field(..., alias='_id')
     name : str
     price: str
     image: str
@@ -37,8 +38,8 @@ class ProductsModel(FileDatabase):
     insertModelClass = InsertProductModel
     
     
-    def __init__(self, name = './file_database/products.json'):
-        super().__init__(name)
+    def __init__(self, name = './file_database/products.json', callbacks = {}):
+        super().__init__(name, callbacks)
     
 # singleton    
 products_model = ProductsModel()

@@ -23,8 +23,10 @@ def assign_restful_routes(app, models, dependancies = None):
     return app
 
 
-def get_app(models, dependancies = None, serve_static_prefix = None, serve_admin_prefix = None, cors_origins = None):
+def get_app(models, dependancies = None, serve_static_prefix = None, serve_admin_prefix = None, cors_origins = None, ws_handler: None):
     app = FastAPI()
+    token_listener = JWTBearer()
+        
     if serve_static_prefix:
         base_path = serve_static_prefix + "/web_server_resources/"
         app.mount("/static", StaticFiles(directory= base_path + "static/"), name="static")
@@ -44,9 +46,73 @@ def get_app(models, dependancies = None, serve_static_prefix = None, serve_admin
         )
             
     if serve_admin_prefix:
-        token_listener = JWTBearer()
         # login
         app.include_router(AdminRouter, tags=["Login"], prefix=serve_admin_prefix)
+
+    if ws_handler is not None:
+        @app.websocket("/ws")
+        async def websocket_endpoint(websocket: WebSocket, clientId: Optional[int] = None):
+            await ws_handler(websocket, clientId)
+            # EXAMPLE HANDLER
+            # async def send_audio_stats(websocket, stats):
+                # while True:
+                    # try:
+                        # # await websocket.send_text('audio stats')
+                        # await websocket.send_json(stats())
+                    # except:
+                        # pass
+                        # # print('send audio stats')
+                    # await asyncio.sleep(0.1)
+            
+            # while True:
+                # try:
+                    # await websocket.accept()
+                    # print(f"connected to client {clientId}")
+                    # # stream audio stats to client
+                    # sa = asyncio.create_task(send_audio_stats(websocket, self.get_audio_stats))
+                    # # create output queue and output task
+                    # wo = asyncio.create_task(self.sm.start_output_websocket(websocket, clientId))
+                    # # create input queue
+                    # wi = asyncio.create_task(self.sm.start_input_websocket(websocket,clientId))
+                    # # print(f"QUERY {client}")
+                    
+                    # # await websocket.send_text('hithere first')
+                    # # try:
+                    # while True:
+                        # try:
+                            # data = await websocket.receive()
+                            # # print(type(data.get('bytes')))
+                            # # print(data.get('bytes') is not None)
+                            # if data.get('type') == "websocket.receive":
+                                # if data.get('bytes') is not None:
+                                    # await self.sm.handle_websocket_audio_message(clientId,data.get('bytes'))
+                                # elif data.get('text') is not None:
+                                    # print(f"WS TEXT MSG: {data.get('text')}")
+                        # except RuntimeError:
+                            # print('ERR: receiving data from WS')
+                            # #break            
+                            # raise WebSocketDisconnect()
+                            # # await asyncio.sleep(1)
+                  # # except Exception as e:
+                        # # print(e)
+                    # try:
+                        # sa.cancel()
+                    # except asyncio.CancelledError:
+                        # pass
+                    # try:
+                        # wi.cancel()
+                    # except asyncio.CancelledError:
+                        # pass
+                    # try:
+                        # wo.cancel()
+                    # except asyncio.CancelledError:
+                        # pass
+                # except WebSocketDisconnect:
+                    # print('CLOSE WS CONNECT CIENT')
+                    # await self.sm.stop_input_websocket(clientId)
+                    # await self.sm.stop_output_websocket(clientId)
+                    
+
 
     assign_restful_routes(app,models, dependancies)
     return app

@@ -6,8 +6,11 @@ class FileDatabase():
     
     filename = None
     database = {}
+    callbacks = {'insert': None, 'update': None, 'replace': None, 'delete': None}
     
-    def __init__(self, filename):
+    def __init__(self, filename, callbacks = None):
+        if callbacks is not None:
+            self.callbacks = callbacks 
         self.filename = filename
         self.load()
         
@@ -15,9 +18,20 @@ class FileDatabase():
         return list(self.database.values())
     
     # TODO
-    async def find(self):
+    async def find(self, search_criteria = None):
+        results = []
         for record in list(self.database.values()):
-            print(record)
+            ok = True
+            if search_criteria is not None:
+                for field in search_criteria:
+                    value = search_criteria[field]
+                    if value is not None:
+                        if (record[field] != value):
+                            ok = False
+                            break
+            if ok:
+                results.append(record)
+            return results
     
         
     async def get(self, id):
@@ -28,13 +42,25 @@ class FileDatabase():
         data    ['_id'] = id
         self.database[id] = data
         self.save()
-    
+        if 'insert' in self.callbacks and self.callbacks['insert']:
+            self.callbacks['insert']('insert',self.database[id])
+            
     async def update(self, id, data):
         for d in data:
             self.database[id][d] = data[d]
         self.save()
+        if 'update' in self.callbacks and self.callbacks['update']:
+            self.callbacks['update']('update',self.database[id])
+            
+    async def replace(self, id, data):
+        self.database[id] = data
+        self.save()
+        if 'replace' in self.callbacks and self.callbacks['replace']:
+            self.callbacks['replace']('replace',self.database[id])
     
     async def delete(self, id):
+        if 'delete' in self.callbacks and self.callbacks['delete']:
+            self.callbacks['delete']('delete',self.database[id])
         self.database.pop(id)
         self.save()
         return True

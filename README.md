@@ -7,9 +7,9 @@ This project helps create a restful api using FastAPI and pydantic with storage 
 The project uses pydantic to map incoming request body data into a storage format.
 
 The project provides
-- File database implementing list, get, insert, update, delete
-- Mongo database implementing list, get, insert, update, delete
-- FastAPI router with routes for each HTTP verb get, post, put, delete
+- File database implementing list, get, insert, update, replace,  delete
+- Mongo database implementing list, get, insert, update, replace, delete
+- FastAPI router with routes for each HTTP verb get, post, put, patch, delete
 - Authentication helpers including a FastAPI router for login and create user plus a token_listener dependancy for ensuring login on a route
 
 This project is based on the example provided by https://github.com/Youngestdev/fastapi-mongo.
@@ -41,6 +41,7 @@ class InsertOrderModel(BaseModel):
         
 # used to map request parameters on update/put
 class UpdateOrderModel(BaseModel):
+    id: int = Field(..., alias='_id')  # update model needs an id field aliased to _id
     name : str
     status: str
     time_started: int
@@ -77,7 +78,10 @@ if __name__ == '__main__':
 
 5. Open [http://localhost:8080/docs](http://localhost:8080/docs) to see the FASTAPI generated documentation for your API.
 
-6. To use authentication, include the admin router and token_listener
+## Authentication
+
+To use authentication, include the admin router and token_listener.
+!! Note that authentication is incomplete and create_user is exposed as a public endpoint. 
 ```
 from fastapi_mongo_restify.auth.jwt_bearer import JWTBearer
 from fastapi_mongo_restify.auth.admin_router import router as AdminRouter
@@ -87,4 +91,11 @@ token_listener = JWTBearer()
 # protect the products endpoint
 app.include_router(get_router(products_model), tags=["Products"], prefix="/products" , dependencies=[Depends(token_listener)])
 ```
+
+## Change Callbacks
+
+The database classes can be called with a dict of callbacks with keys insert, update, replace, delete . When a data modification is applied the callback is triggered with dict parameter including modification type and modified record.
+This behavior is intended to facilitate websocket streaming of changes posted through the restful API.
+
+
 

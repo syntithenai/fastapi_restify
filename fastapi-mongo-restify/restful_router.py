@@ -1,14 +1,17 @@
 from fastapi import APIRouter, Body
 from fastapi.encoders import jsonable_encoder
 from response_models import *
+from typing import Optional, List
 
 def get_router(model):
     router = APIRouter()
     @router.get("/", response_description="Records retrieved")
-    async def get():
-        records = await model.list()
-        # print('rec')
-        # print(records)
+    async def get(filter = None):
+        if filter is not None:
+            c = json.loads(filter)
+            records = await model.find(c)
+        else:
+            records = await model.list()
         return ResponseModel(records, "Data retrieved successfully") \
             if len(records) > 0 \
             else ResponseModel(
@@ -24,10 +27,13 @@ def get_router(model):
 
 
     @router.post("/", response_description="Data added into the database")
-    async def post(record: model.insertModelClass = Body(...)):
-        record = jsonable_encoder(record)
-        new_record = await model.insert(record)
-        return ResponseModel(new_record, "Added successfully.")
+    async def post(records: List[model.insertModelClass] = Body(...)):
+        postedrecords = jsonable_encoder(records)
+        new_records = []
+        for record in postedrecords:
+            new_record = await model.insert(record)
+            new_records.append(new_record)
+        return ResponseModel(new_records, "Added successfully.")
 
 
     @router.delete("/{id}", response_description="Data deleted from the database")
@@ -38,12 +44,38 @@ def get_router(model):
             else ErrorResponseModel("An error occured", 404, "Student with id {0} doesn't exist".format(id))
 
 
-    @router.put("/{id}")
-    async def update(id: str, req: model.updateModelClass = Body(...)):
-        updated = await model.update(id, req.dict())
-        return ResponseModel("Record with ID: {} name update is successful".format(id),
-                             "Record updated successfully") \
-            if updated \
-            else ErrorResponseModel("An error occurred", 404, "There was an error updating the record.".format(id))
+    @router.put("/")
+    async def put(req: List[model.updateModelClass] = Body(...)):
+        records = jsonable_encoder(req)
+        new_records = []
+        error = False
+        for record in records:
+            id = record.get('_id')
+            if id:
+                updated = await model.update(id, record)
+                new_records.append(updated)
+            else:
+                error = True
+        return ResponseModel("Records updated successfuly".format(new_records),
+                             "Records updated successfully") \
+            if not error \
+            else ErrorResponseModel("An error occurred", 404, "There was an error updating the records.".format(records))
+
+    @router.patch("/")
+    async def patch(req: List[model.updateModelClass] = Body(...)):
+        records = jsonable_encoder(req)
+        new_records = []
+        error = False
+        for record in records:
+            id = record.get('_id')
+            if id:
+                updated = await model.replace(id, record)
+                new_records.append(updated)
+            else:
+                error = True
+        return ResponseModel("Records replaced successful".format(new_records),
+                             "Records replaced successfully") \
+            if error \
+            else ErrorResponseModel("An error occurred", 404, "There was an error replacing the records.".format(records))
 
     return router
