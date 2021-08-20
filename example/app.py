@@ -18,6 +18,9 @@ from products_model_file import products_model
 # orders save to mongo
 from orders_model_mongo import orders_model
 
+# from websocket_handler import websocket_handler         
+
+
 token_listener = JWTBearer()  # require login for orders endpoints
-app = get_app({'products':products_model, 'orders':orders_model}, {'orders':[Depends(token_listener)]})
+app = get_app(models = {'products':products_model, 'orders':orders_model}, dependancies = {'orders':[Depends(token_listener)]})
 
