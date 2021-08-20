@@ -56,7 +56,10 @@ class MongoDatabase():
     async def update(self, id, data):
         item = await self.collection.find_one({"_id": ObjectId(id)})
         if item:
-            data.pop('_id')
+            try:
+                data.pop('_id')
+            except KeyError:
+                pass
             await self.collection.update_one({"_id": ObjectId(id)}, {"$set": data})
             if 'update' in self.callbacks and self.callbacks['update']:
                 item = await self.collection.find_one({"_id": ObjectId(id)})
@@ -68,7 +71,10 @@ class MongoDatabase():
     async def replace(self, id, data):
         item = await self.collection.find_one({"_id": ObjectId(id)})
         if item:
-            data.pop('_id')
+            try:
+                data.pop('_id')
+            except KeyError:
+                pass
             await self.collection.replace_one({"_id": ObjectId(id)}, data)
             if 'replace' in self.callbacks and self.callbacks['replace']:
                 item = await self.collection.find_one({"_id": ObjectId(id)})

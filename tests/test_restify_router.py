@@ -3,6 +3,7 @@ from fastapi.testclient import TestClient
 import motor
 import sys
 import os
+import json
 from pydantic import BaseModel, EmailStr, Field
 from pymongo_inmemory import Mongod
 import asyncio
@@ -61,7 +62,7 @@ def log_callback(type, data):
 
 async def do_test_restify_router():
     # create model inside asyncio function to ensure motor has access to same event loop
-    callbacks = {'insert':log_callback, 'update':log_callback, 'replace':log_callback, 'delete':log_callback, }
+    callbacks = {'insert':log_callback, 'update':log_callback, 'replace':log_callback, 'delete':log_callback}
     test_model = TestModel(callbacks)
     app = FastAPI()
     app.include_router(get_router(test_model), tags=["Test"], prefix="/test")
@@ -110,6 +111,13 @@ async def do_test_restify_router():
             getresponse = await ac.get(base_url+response.json().get('data')[0][0].get('_id'))
             assert(getresponse.json().get('data')[0].get('name') == 'sam')
             assert(getresponse.json().get('data')[0].get('age', None) == None)
+            
+            # find a record
+            findresponse = await ac.get(base_url + "?filter="+json.dumps({'name': 'sam'}))
+            print(findresponse.json())
+            assert(findresponse.json().get('data')[0][0].get('name') == 'sam')
+            assert(findresponse.json().get('data')[0][0].get('age', None) == None)
+            
             # delete a record
             response = await ac.get(base_url)
             deleteresponse = await ac.delete(base_url + response.json().get('data')[0][0].get('_id'))

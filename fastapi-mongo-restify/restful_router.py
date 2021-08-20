@@ -2,6 +2,7 @@ from fastapi import APIRouter, Body
 from fastapi.encoders import jsonable_encoder
 from response_models import *
 from typing import Optional, List
+import json
 
 def get_router(model):
     router = APIRouter()
