@@ -23,7 +23,7 @@ This project is based on the example provided by https://github.com/Youngestdev/
 
 2. Then create a model object that extends MongoDatabase (or FileDatabase)
 - provides pydantic model classes as class variables, updateModelClass and insertModelClass.
-The insert model is applied to parsing POST requests and the update model is used for PUT requests.
+The insert model is applied to parsing POST requests and the update model is used for PUT/PATCH requests.
 - calls super().__init('collectionName') in it's constructor
 
 

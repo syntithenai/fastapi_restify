@@ -23,7 +23,7 @@ def assign_restful_routes(app, models, dependancies = None):
     return app
 
 
-def get_app(models, dependancies = None, serve_static_prefix = None, serve_admin_prefix = None, cors_origins = None, ws_handler: None):
+def get_app(models, dependancies = None, serve_static_prefix = None, serve_admin_prefix = None, cors_origins = None, ws_handle= None):
     app = FastAPI()
     token_listener = JWTBearer()
         
