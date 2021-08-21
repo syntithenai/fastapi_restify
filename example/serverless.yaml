@@ -1,0 +1,47 @@
+service: testrestify
+package:
+  individually: true
+provider:
+  name: aws
+  runtime: python3.8
+  region: eu-west-1
+  stage: ${opt:stage, "dev"}
+plugins:
+  - serverless-python-requirements
+  - serverless-offline
+custom:
+  pythonRequirements:
+    fileName: requirements.txt
+    zip: true
+    dockerizePip: true
+    layer:
+      name: my-awesome-app-layer
+      description: My awesome app layer
+      compatibleRuntimes:
+        - python3.8
+functions:
+  app:
+    package:
+      include:
+        - "auth/"
+        - "app.py"
+        - "handler.py"
+        - "orders_model_mongo.py"
+        - "products_model_file.py"
+      exclude:
+        - "requirements.txt"
+        - "package.json"
+        - "package-lock.json"
+        - ".serverless/**"
+        - ".virtualenv/**"
+        - "node_modules/**"
+    handler: handler.handler
+    environment:
+      STAGE: ${self:provider.stage}
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          method: any
+          path: /{proxy+}
+

@@ -12,6 +12,7 @@ from auth.admin_router import router as AdminRouter
 from restful_router import get_router
 from auth.jwt_bearer import JWTBearer
 
+
 def assign_restful_routes(app, models, dependancies = None):
     for model in models:
         # rest apis
@@ -24,7 +25,10 @@ def assign_restful_routes(app, models, dependancies = None):
 
 
 def get_app(models, dependancies = None, serve_static_prefix = None, serve_admin_prefix = None, cors_origins = None, ws_handler = None):
-    app = FastAPI()
+    
+    stage = os.environ.get('STAGE', None)
+    openapi_prefix = f"/{stage}" if stage else "/"
+    app = FastAPI(openapi_prefix=openapi_prefix)
     token_listener = JWTBearer()
         
     if serve_static_prefix:

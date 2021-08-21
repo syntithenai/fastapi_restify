@@ -1,6 +1,6 @@
 # FastAPI Restify
 
-[![Python application](https://github.com/syntithenai/fastapi-mongo-restify/actions/workflows/python-app.yml/badge.svg)](https://github.com/syntithenai/fastapi-mongo-restify/actions/workflows/python-app.yml)
+[![Python application](https://github.com/syntithenai/fastapi_restify/actions/workflows/python-app.yml/badge.svg)](https://github.com/syntithenai/fastapi_restify/actions/workflows/python-app.yml)
 
 This project helps create a restful api using FastAPI and pydantic with storage engines including file and mongodb.
 
@@ -28,7 +28,7 @@ The insert model is applied to parsing POST requests and the update model is use
 
 
 ```
-from fastapi_mongo_restify.mongo_database import MongoDatabase
+from fastapi_restify.mongo_database import MongoDatabase
 
 from pydantic import BaseModel, EmailStr, Field
 
@@ -60,7 +60,7 @@ class OrdersModel(MongoDatabase):
 
 ```
 from fastapi import FastAPI, Depends
-from fastapi_mongo_restify.restful_router import get_router
+from fastapi_restify.restful_router import get_router
 from orders_model_mongo import OrdersModel
 orders_model = OrdersModel()
 
@@ -83,8 +83,8 @@ if __name__ == '__main__':
 To use authentication, include the admin router and token_listener.
 !! Note that authentication is incomplete and create_user is exposed as a public endpoint. 
 ```
-from fastapi_mongo_restify.auth.jwt_bearer import JWTBearer
-from fastapi_mongo_restify.auth.admin_router import router as AdminRouter
+from fastapi_restify.auth.jwt_bearer import JWTBearer
+from fastapi_restify.auth.admin_router import router as AdminRouter
 
 app.include_router(AdminRouter, tags=["Administrator"], prefix="/admin")
 token_listener = JWTBearer()
@@ -98,4 +98,7 @@ The database classes can be called with a dict of callbacks with keys insert, up
 This behavior is intended to facilitate websocket streaming of changes posted through the restful API.
 
 
+## TODO
+
+https://pynamodb.readthedocs.io/en/latest/local.html
 

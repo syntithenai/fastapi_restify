@@ -1,0 +1,6 @@
+.serverless
+.requirements.zip
+package-lock.json
+unzip_requirements.py
+node_modules
+

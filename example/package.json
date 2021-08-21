@@ -1,0 +1,9 @@
+{
+    "name": "test-fastapi-mongo-restify",
+    "version": "1.0.0",
+    "author": "Steve Ryan",
+    "dependencies": {
+        "serverless-offline": "^8.0.0",
+        "serverless-python-requirements": "^5.0.1"
+    }
+}

@@ -14,7 +14,7 @@ from typing import Optional
 from httpx import AsyncClient
 
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/fastapi-mongo-restify")
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/fastapi_restify")
 
 from restful_router import get_router
 from mongo_database import MongoDatabase

@@ -42,7 +42,7 @@ def get_router(model):
         deleted = await model.delete(id)
         return ResponseModel("Record with ID: {} removed".format(id), "Record deleted successfully") \
             if deleted \
-            else ErrorResponseModel("An error occured", 404, "Student with id {0} doesn't exist".format(id))
+            else ErrorResponseModel("An error occured", 404, "Record with id {0} doesn't exist".format(id))
 
 
     @router.put("/")

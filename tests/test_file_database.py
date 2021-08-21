@@ -3,7 +3,7 @@ import asyncio
 import sys
 import os
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/fastapi-mongo-restify")
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/fastapi_restify")
 
 from file_database import FileDatabase
 
