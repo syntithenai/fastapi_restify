@@ -3,25 +3,50 @@ import uvicorn
 import asyncio
 import time
 import contextlib
+import threading
+
 
 from uvicorn import Config, Server
-from uvicorn_server_context import UvicornServerContext
+# from uvicorn_server_context import UvicornServerContext
 
 
 import json
 import os
+
+class UvicornServerContext(uvicorn.Server):
+    def install_signal_handlers(self):
+        pass
+
+    @contextlib.contextmanager
+    def run_in_thread(self):
+        thread = threading.Thread(target=self.run)
+        thread.start()
+        try:
+            while not self.started:
+                time.sleep(1e-3)
+            yield
+        finally:
+            self.should_exit = True
+            thread.join()
+
 
 class WebServer:
     server = None
     app = None
     proc = None
     task = None
-    
-    def __init__(self,app):
+    ssl_certfile = None
+    ssl_keyfile = None
+    def __init__(self,app, ssl_certfile = None, ssl_keyfile = None):
         self.app = app
+        self.ssl_certfile = ssl_certfile
+        self.ssl_keyfile = ssl_keyfile
     
     def create_server(self):
-        config = Config(app=self.app, port = int(os.environ.get('PORT', '8081')), host="0.0.0.0")
+        if self.ssl_keyfile is not None and self.ssl_certfile is not None:
+            config = Config(app=self.app, port = int(os.environ.get('PORT', '8081')), host="0.0.0.0", ssl_keyfile = self.ssl_keyfile, ssl_certfile = self.ssl_certfile)
+        else:
+            config = Config(app=self.app, port = int(os.environ.get('PORT', '8081')), host="0.0.0.0")
         server = UvicornServerContext(config)
         return server
         

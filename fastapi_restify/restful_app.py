@@ -7,19 +7,19 @@ from fastapi.staticfiles import StaticFiles
 from fastapi import Query, FastAPI, Request, WebSocket, WebSocketDisconnect
 from typing import Optional
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/fastapi-mongo-restify")
-from auth.admin_router import router as AdminRouter
+# sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/fastapi_restify")
 from restful_router import get_router
-from auth.jwt_bearer import JWTBearer
+from admin_router import router as AdminRouter
+from jwt_bearer import JWTBearer
+# from mongo_connect import mongo_connect
 
-
-def assign_restful_routes(app, models, dependancies = None):
+def assign_restful_routes(app, models, dependancies = None, path_prefix="/"):
     for model in models:
         # rest apis
         if dependancies is not None and 'model' in dependancies:
-            app.include_router(get_router(models[model]), tags=["Rest APIs"], prefix="/"+model , dependencies=dependancies[model])
+            app.include_router(get_router(models[model]), tags=["Rest APIs"], prefix=path_prefix+model , dependencies=dependancies[model])
         else:
-            app.include_router(get_router(models[model]), tags=["Rest APIs"], prefix="/"+model )
+            app.include_router(get_router(models[model]), tags=["Rest APIs"], prefix=path_prefix+model )
             
     return app
 
@@ -27,10 +27,11 @@ def assign_restful_routes(app, models, dependancies = None):
 def get_app(models, dependancies = None, serve_static_prefix = None, serve_admin_prefix = None, cors_origins = None, ws_handler = None):
     
     stage = os.environ.get('STAGE', None)
-    openapi_prefix = f"/{stage}" if stage else "/"
-    app = FastAPI(openapi_prefix=openapi_prefix)
+    root_path = f"/{stage}" if stage else "/"
+    app = FastAPI(root_path=root_path)
     token_listener = JWTBearer()
-        
+    # app.add_event_handler("startup", connect_db)
+    # app.add_event_handler("shutdown", close_db)
     if serve_static_prefix:
         base_path = serve_static_prefix + "/web_server_resources/"
         app.mount("/static", StaticFiles(directory= base_path + "static/"), name="static")

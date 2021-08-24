@@ -5,8 +5,10 @@ import os
 import motor.motor_asyncio
 
 from pymongo_inmemory import Mongod
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/fastapi_restify")
-from mongo_database import MongoDatabase
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))+"/fastapi_restify")
+
+from fastapi_restify.mongo_database import MongoDatabase
 
 class MongoClient(motor.motor_asyncio.AsyncIOMotorClient):
     def __init__(self, host=None, port=None, **kwargs):

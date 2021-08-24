@@ -1,7 +1,7 @@
 motor
 PyJWT
 bcrypt
-uvicorn
+uvicorn[standard]
 pymongo
 python-decouple
 fastapi

@@ -3,9 +3,9 @@ import asyncio
 import sys
 import os
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/fastapi_restify")
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from file_database import FileDatabase
+from fastapi_restify.file_database import FileDatabase
 
 def test_file_database():
     filename = "/tmp/testdata.json"

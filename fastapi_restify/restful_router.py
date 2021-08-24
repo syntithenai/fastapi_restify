@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Body
 from fastapi.encoders import jsonable_encoder
-from response_models import *
 from typing import Optional, List
 import json
+from response_models import *
 
 def get_router(model):
-    router = APIRouter()
+    router = APIRouter(redirect_slashes=False)
     @router.get("/", response_description="Records retrieved")
     async def get(filter = None, limit = None, offset = None):
         if filter is not None:

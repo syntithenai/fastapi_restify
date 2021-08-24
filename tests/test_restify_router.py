@@ -14,12 +14,12 @@ from typing import Optional
 from httpx import AsyncClient
 
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "/fastapi_restify")
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from restful_router import get_router
-from mongo_database import MongoDatabase
+from fastapi_restify.restful_router import get_router
+from fastapi_restify.mongo_database import MongoDatabase
 
-from web_server import WebServer
+from fastapi_restify.web_server import WebServer
 
 class MongoMemoryClient(motor.motor_asyncio.AsyncIOMotorClient):
     def __init__(self, host=None, port=None, **kwargs):
